@@ -1,39 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-typedef struct lib
-{
-    char *name;
-}
-lib;
-
 int main()
 {
-  int x;
-  printf("请输入书的个数\n");
-  scanf ("%d",&x);
-  lib p[x];
-  for (int i = 0; i<x; i++)
-  {
-    char *s[10];
-    scanf("%s",s);
-    p[i].name = s;
-  }
-  printf("请输入要找的书:\n");
-  char *id[10];
-  scanf ("%s",id);
-  for (int i = 0; i<x; i++)
-  {
-   int re = strcmp(id,p[i].name);
-   if (re == 0)
-   {
-    printf("found\n");
-    break;
-   }
-   else
-   {
-    printf("not found\n");
-   }
-  }
-    return 0;
+int x;
+printf("请输入书本的个数\n");
+scanf("%d",&x);
+char str[x][14];
+printf("请输入书本的名字\n");
+for (int i = 0; i < x; i++)
+{
+scanf ("%s",str[i]);
+}
+char name[14];
+printf("请输入你想要找的书\n");
+scanf ("%s",name);
+for (int i = 0; i < x; i++)
+{
+int tmp = strcmp(name,str[i]);
+if (tmp == 0)
+{
+printf("found\n");
+break;
+}
+else if (tmp != 0 && i == x - 1)
+{
+printf("not found\n");
+}
+}
+return 0;
 }
