@@ -3,17 +3,17 @@
 #include <stdlib.h>
 #define MAXSIZE 100
 #define MORESIZE 150
-typedef char elemtype;
+typedef int elemtype;
 typedef struct sqlist
 {
-elemtype *name;
+int *name;
 int length;
 }
 sqlist;
 //初始化顺序表
 int initlist(sqlist *L) 
 {
-  L -> name =(elemtype*) malloc(MAXSIZE * sizeof(sqlist));
+  L -> name =(elemtype*) malloc(MAXSIZE * sizeof(elemtype));
   if (!L -> name)
   {
         printf("出错啦！请检查内存\n");
@@ -21,6 +21,116 @@ int initlist(sqlist *L)
   }
   L -> length = 0;
   return 0;
+}
+//合并有序顺序表
+int meragesqlist1(sqlist *La,sqlist *Lb,sqlist *Lc)
+{
+  int lena = La -> length;
+  int lenb = Lb -> length;
+  int lenc = lena + lenb;
+  Lc -> name =(int*)malloc(sizeof(int) * lenc);
+  Lc -> length = lenc;
+  int *tma = La -> name;
+  int *lasta = tma + lena; 
+  int *tmb = Lb -> name;
+  int *lastb = tmb + lenb;
+  int *tmc = Lc -> name;
+  while (tma != lasta && tmb != lastb)
+  {
+    if (*tma >= *tmb)
+    {
+      *tmc++ = *tmb++;
+    }
+    else
+    {
+      *tmc++ = *tma++;
+    }
+  }
+  if (tma != lasta)
+  {
+    *tmc++ = *tma++;
+  }
+  else
+  {
+    *tmc++ = *tmb++;
+  }
+  return 1; 
+}
+//实现合并
+int meragesqlist2(sqlist *La,sqlist *Lb,sqlist *Lc)
+{
+  int lena = La -> length;
+  int lenb = Lb -> length;
+  int lenc = lena + lenb;
+  Lc -> name =(int*)malloc(sizeof(int) * lenc);
+  Lc -> length = lenc;
+  int *tma = La -> name;
+  int *lasta = tma + lena; 
+  int *tmb = Lb -> name;
+  int *lastb = tmb + lenb;
+  int *tmc = Lc -> name;
+  while (tma != lasta && tmb != lastb)
+  {
+    if (*tma > *tmb)
+    {
+      *tmc++ = *tmb++;
+    }
+    else if(*tma < *tmb)
+    {
+      *tmc++ = *tma++;
+    }
+    else
+    {
+      *tmc++ = *tma++;
+      tmb++;
+      Lc -> length -= 1;
+    }
+  }
+  if (tma != lasta)
+  {
+    *tmc++ = *tma++;
+  }
+  else
+  {
+    *tmc++ = *tmb++;
+  }
+  return 1; 
+}
+//实现线性表的合并
+int meragesqlist(sqlist *La,sqlist *Lb)
+{
+  int len1 = La -> length;
+  int len2 = Lb -> length;
+  int *p1;
+  int *p2;
+  for (p2 = Lb -> name;p2 != Lb -> name + len2; p2++)
+  {
+    for (p1 = La -> name;p1 != La -> name + len1; p1++)
+    {
+      if (*p1 == *p2)
+      {
+       break; 
+      }
+    }
+    if (p1 == La -> name + len1)
+    {
+        *p1 = *p2;
+        La -> length += 1;
+        len1 += 1;
+    }
+  }
+  return 1;
+}
+int verse(sqlist* Lc)
+{
+    int len = Lc -> length;
+    for (int i = 0; i < len / 2; i++)
+    {
+      int tmp = Lc -> name[i];
+      Lc -> name[i] = Lc -> name[len - 1 -i];
+      Lc -> name[len - 1 - i] = tmp;
+    }
+    return 1;
 }
 //创建顺序表
 int createlist(sqlist *L)
@@ -31,7 +141,7 @@ int createlist(sqlist *L)
     printf("请输入要创建的元素\n");
     for (int i = 0; i < n; i++)
     {
-        scanf(" %c",&L -> name[i]);
+        scanf("%d",&L -> name[i]);
         L -> length += 1;
     }
     return 1;
@@ -42,7 +152,7 @@ int printflist(sqlist L)
     printf("\n输出顺序表的元素为：\n");
     for(int i = 0;i < L.length;i++)
     {
-      printf("%c\n",L.name[i]);
+      printf("%d\n",L.name[i]);
     }
     return 1;
 }

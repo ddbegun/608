@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-typedef char elemtype;
+typedef int elemtype;
 typedef struct node
 {
     elemtype elem;
@@ -15,11 +15,124 @@ elemtype initlinklist(node *H)
     H -> next = NULL;
     return 1;
 }
+//合并链表(有重复)
+int meragelist(node *La,node * Lb)
+{
+    node *Lc = NULL;
+    node *tma = La;
+    node *tmb = Lb;
+    if (tma -> elem < tmb -> elem)
+    {
+        Lc = tma;
+        tma = tma -> next;
+    }
+    else if (tma -> elem > tmb -> elem)
+    {
+        Lc = tmb;
+        tmb = tmb -> next;
+    }
+    else
+    {
+        Lc = tma;
+        tma = tma -> next;
+        Lc -> next = tmb;
+        Lc = tmb;
+        tmb = tmb -> next;
+    }
+    while (tma != NULL && tmb != NULL)
+    {
+        if (tma -> elem > tmb -> elem)
+        {
+            Lc -> next = tmb;
+            Lc = tmb;
+            tmb = tmb -> next;
+        }
+        else
+        {
+            Lc -> next = tma;
+            Lc = tma;
+            tma = tma -> next;
+        }
+    }
+    if (tma == NULL)
+    {
+        Lc -> next = tmb;
+        return 1;
+    }
+    else
+    {
+        Lc -> next = tma;
+        return 0;
+    }
+}
+//合并链表（没有重复）
+int meragelist2(node *La,node *Lb)
+{
+    node *Lc = NULL;
+    node *tma = La;
+    node *tmb = Lb;
+    if (tma -> elem < tmb -> elem)
+    {
+        Lc = tma;
+        tma = tma -> next;
+    }
+    else
+    {
+        Lc = tmb;
+        tmb = tmb -> next;
+    }
+    while (tma != NULL && tmb != NULL)
+    {
+        if (tma -> elem > tmb -> elem)
+        {
+            Lc -> next = tmb;
+            Lc = tmb;
+            tmb = tmb -> next;
+        }
+        else if (tma -> elem < tmb -> elem)
+        {
+            Lc -> next = tma;
+            Lc = tma;
+            tma = tma -> next;
+        }
+        else
+        {
+            node *new = NULL;
+            Lc -> next = tma;
+            Lc = tma;
+            tma = tma -> next;
+            new = tmb -> next;
+            free(tmb);
+            tmb = new;
+        }
+    }
+    if (tma == NULL)
+    {
+        Lc -> next = tmb;
+        return 1;
+    }
+    else
+    {
+        Lc -> next = tma;
+        return 0;
+    }
+}
+//逆序输出
+void verse(node *p)
+{
+    if (p -> next == NULL || p == NULL)
+    {
+        printf("%d\n",p -> elem);
+        return ;
+    }
+    verse(p -> next);
+    printf("%d\n",p -> elem);
+}
 //前插法插入任意个数据元素
 node* beforeinsert(node *list,int i,node *H)
 {
     list = NULL;
-    char x;
+    elemtype x;
     printf("请输入要插入的元素\n");
     for (int tmp = 0;tmp < i;tmp++)
     {
@@ -29,7 +142,7 @@ node* beforeinsert(node *list,int i,node *H)
         printf("出错啦！");
         return NULL;
        }
-       scanf(" %c",&x); 
+       scanf("%d",&x); 
        H -> elem = x;
        H -> next = NULL;
        if(list == NULL)
@@ -57,7 +170,7 @@ int printlink(node *list)
     node *tmp = NULL;
     for (tmp = list;tmp != NULL;tmp = tmp -> next)
     {
-        printf("%c\n",tmp -> elem);
+        printf("%d\n",tmp -> elem);
     }
     return 1;
 }
@@ -75,7 +188,7 @@ int printlen(node *list)
 node *afterinsert(node *list,int i,node *H)
 {
     list = NULL;
-    char x;
+    elemtype x;
     printf("请输入要插入的元素\n");
     for (int tmp = 0; tmp < i; tmp++) 
     {
@@ -85,7 +198,7 @@ node *afterinsert(node *list,int i,node *H)
             printf("出错啦!\n");
             return NULL;
         }
-        scanf(" %c",&x);
+        scanf("%d",&x);
         H -> elem = x;
         H -> next = NULL;
         H -> next = list;
@@ -102,7 +215,7 @@ int pointi(node *list,int i)
         cell += 1;
         if (cell == i)
         {
-            printf("该位置上的元素为：%c",tmp -> elem);
+            printf("该位置上的元素为：%d",tmp -> elem);
             return 1;
         }
     }
